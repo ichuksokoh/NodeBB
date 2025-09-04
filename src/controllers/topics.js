@@ -127,7 +127,7 @@ topicsController.get = async function getTopic(req, res, next) {
 		user.getUserFields(topicData.uid, ['username', 'userslug']),
 		buildBreadcrumbs(topicData),
 		addOldCategory(topicData, userPrivileges),
-		addTags(topicData, req, res, currentPage, postAtIndex),
+		addTags({topicData, res, currentPage, postAtIndex}),
 		topics.increaseViewCount(req, tid),
 		markAsRead(req, tid),
 		analytics.increment([`pageviews:byCid:${topicData.category.cid}`]),
@@ -208,7 +208,7 @@ async function addOldCategory(topicData, userPrivileges) {
 	}
 }
 
-async function addTags(topicData, req, res, currentPage, postAtIndex) {
+async function addTags({topicData, res, currentPage, postAtIndex}) {
 	let description = '';
 	if (postAtIndex && postAtIndex.content) {
 		description = utils.stripHTMLTags(utils.decodeHTMLEntities(postAtIndex.content)).trim();
